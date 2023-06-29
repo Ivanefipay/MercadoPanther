@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -21,6 +22,12 @@ Route::group(['prefix' => 'Users', 'controller' => UserController::class], funct
 Route::group(['prefix' => 'Sales', 'controller' => SaleController::class], function () {
 	Route::get('/GetAllSales', 'getAllSales');
 	Route::post('/CreateSale', 'createSale');
+});
+
+
+Route::group(['prefix' => 'Products', 'controller' => ProductController::class], function () {
+	Route::get('/GetAllProducts', 'getAllProducts');
+	Route::post('/CreateProduct', 'createProduct');
 });
 
 
