@@ -1,10 +1,16 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Models\Product;
 
-Route::view('/', 'home');
+Route::get('/', [ProductController::class, 'showHomeWithBooks']);
 
+Route::group(['controller' => ProductController::class], function () {
+	Route::get('login', 'showProducts')->name('products');
+});
 Route::group(['controller' => LoginController::class], function () {
 	// Login Routes...
 	Route::get('login', 'showLoginForm')->name('login');
@@ -37,8 +43,10 @@ Route::group(['controller' => VerificationController::class], function () {
 	Route::post('email/resend', 'resend')->name('verification.resend');
 });
 
-// Registration Routes...
-Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-Route::post('register', 'Auth\RegisterController@register');
+Route::group(['controller' => RegisterController::class], function () {
+	// Registration Routes...
+	Route::get('register', 'showRegistrationForm')->name('register');
+	Route::post('register', 'register');
+});
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
