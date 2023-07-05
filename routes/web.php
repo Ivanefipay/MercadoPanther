@@ -1,16 +1,53 @@
 <?php
 
+use App\Models\User;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Models\Product;
+use App\Http\Controllers\UserController;
+
+Route::get('/test', function(){
+	/* $users = User::get();
+	foreach($users as $user){
+		if($user->number_id == 1093221111) $user->assignRole('admin');
+		else $user->assignRole('user');
+	} */
+	/* Role::create(['name' => 'user']); */
+});
 
 Route::get('/', [ProductController::class, 'showHomeWithBooks']);
 
-Route::group(['controller' => ProductController::class], function () {
-	Route::get('login', 'showProducts')->name('products');
+Route::group(['prefix' => 'Users', 'middleware' => ['auth', 'role:admin'], 'controller' => UserController::class], function(){
+	Route::get('/GetAllUsers', 'getAllUsers');
+	Route::get('/GetAnUser/{user}', 'getAnUser');
+	Route::post('/CreateUser', 'createUser');
+	Route::put('/UpdateUser/{user}', 'updateUser');
+	Route::delete('/DeleteUser/{user}', 'deleteUser');
+
+	Route::get('/GetAllSalesByUser/{user}', 'getAllSalesByUser');
+	Route::get('/GetAllUserWithSales', 'getAllUserWithSales');
 });
+
+Route::group(['prefix' => 'Products', 'controller' => ProductController::class], function () {
+	Route::get('login', 'showProducts')->name('products');
+	Route::get('/GetAllProducts', 'getAllProducts');
+	Route::group(['middleware' => ['auth', 'role:admin|user']], function(){
+		Route::get('/GetAProduct/{product}', 'getAProduct');
+		Route::post('/CreateProduct', 'createProduct');
+		Route::post('/UpdateProduct/{product}', 'updateProduct');
+		Route::delete('/DeleteAProduct/{product}', 'deleteAProduct');
+	});
+});
+
+
+Route::group(['prefix' => 'Categories', 'controller' => CategoryController::class], function () {
+	Route::get('/GetAllCategories', 'getAllCategories');
+});
+
+
 Route::group(['controller' => LoginController::class], function () {
 	// Login Routes...
 	Route::get('login', 'showLoginForm')->name('login');

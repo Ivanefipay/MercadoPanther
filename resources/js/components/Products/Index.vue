@@ -4,39 +4,48 @@
 
 		<div class="card-header d-flex justify-content-between">
 			<h2>Productos</h2>
-			<a class="btn btn-primary"> Crear producto</a>
+			<button @click="openModal" class="btn btn-primary"> Crear producto</button>
 		</div>
 
-		<div class="card-body" >
-            <section class="table-responsive" v-if="load">
-				<table-component :products_data="products"/>
+		<div class="card-body">
+			<section class="table-responsive" v-if="load">
+				<table-component :products_data="products" />
 			</section>
 			<section v-else>
 				<div class="d-flex justify-content-center my-3">
-                    <div class="spinner-border" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
+					<div class="spinner-border" role="status">
+						<span class="visually-hidden">Loading...</span>
+					</div>
+				</div>
 			</section>
 		</div>
+
+		<section v-if="load_modal">
+			<modal :product_data="product"/>
+		</section>
 	</div>
 </template>
 
 <script>
-import { onMounted } from 'vue';
+
 import TableComponent from './Table.vue'
+import Modal from './Modal.vue'
 import axios from 'axios';
 
 export default {
-	props:[],
+	props: [],
 	components: {
-		TableComponent
+		TableComponent,
+		Modal
 	},
 
 	data() {
 		return {
 			products: [],
-			load: false
+			load: false,
+			load_modal: false,
+			modal: null,
+			product: null
 		};
 	},
 	created() {
@@ -45,24 +54,49 @@ export default {
 	update() {
 
 	},
-	destroyed(){
+	destroyed() {
 
 	},
-	Mounted(){
+	Mounted() {
 
 	},
 	methods: {
-		async index(){
+		async index() {
 			this.getProducts()
 		},
 		async getProducts() {
-		try {
-			const {data: {product}} = await axios.get('/api/Products/GetAllProducts')
-			this.products = product;
-			this.load = true
-		} catch (error) {
-			console.log(error);
-		}
+			try {
+				this.load = false
+				const { data: { product } } = await axios.get('Products/GetAllProducts')
+				this.products = product;
+				this.load = true
+			} catch (error) {
+				console.log(error);
+			}
+
+		},
+		openModal() {
+			this.load_modal = true;
+			setTimeout(() => {
+				this.modal = new bootstrap.Modal(document.getElementById('product_modal'), {
+					keyboard: false
+				})
+				this.modal.show()
+
+				const modal = document.getElementById('product_modal')
+				modal.addEventListener('hidden.bs.modal', ()=> {
+					this.load_modal = false
+					this.product = null
+				})
+			}, 200)
+		},
+		closeModal() {
+			this.modal.hide()
+			this.getProducts()
+		},
+		editProduct(product){
+			this.product = product
+			this.openModal()
 		}
 	}
 };
