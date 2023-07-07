@@ -59,7 +59,7 @@
 								<a class="dropdown-item fs-6" href="{{ route('users') }}">Usuarios</a>
 								<a class="dropdown-item fs-6" href="{{ route('products') }}">Productos</a>
 								@endrole
-								<a class="dropdown-item fs-6" href="{{ route('sales') }}">Ir a carrito
+								<a class="dropdown-item fs-6 " href="{{ route('sales') }}">Ir a carrito
 								</a>
 								<a class="dropdown-item fs-6" href="{{ route('logout') }}"
 								   onclick="event.preventDefault();

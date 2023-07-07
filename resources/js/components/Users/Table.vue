@@ -8,6 +8,7 @@
 				<th scope="col">AELLIDO</th>
 				<th scope="col">N° IDENTIFICACION</th>
 				<th scope="col">CORREO ELECTRONICO</th>
+				<th scope="col">ROL</th>
 				<th scope="col">ACCIONES</th>
 			</tr>
 		</thead>
@@ -80,6 +81,7 @@ export default {
 					{data: 'last_name', name: 'last_name'},
 					{data: 'number_id', name: 'number_id'},
 					{data: 'email', name: 'email'},
+					{data: 'roles[0].name', name: 'roles', searchable: false},
 					{data: 'action', name: 'action'},
 				]
 			})
@@ -88,11 +90,8 @@ export default {
 		getEvent(event){
 			const button = event.target
 			if(button.getAttribute('role') == 'edit'){
-				this.getProduct(button.getAttribute('data-id'))
+				 this.rol(button.getAttribute('data-id'))
 				/* alert('edit') */
-			}
-			if(button.getAttribute('role') == 'delete'){
-				this.deleteProduct(button.getAttribute('data-id'))
 			}
 		},
 		async getProduct(product_id) {
@@ -103,24 +102,24 @@ export default {
 				console.log(error);
 			}
 		},
-		async deleteProduct(product_id) {
+		async rol(product_id) {
 			try {
 				const result = await Swal.fire({
 					icon: 'info',
-					title: 'Quieres eliminar el producto?',
+					title: 'Quieres cambiar el rol?',
 					showCancelButton: true,
-					confirmButtonText: 'Eliminar',
+					confirmButtonText: 'Cambiar',
 				})
 				if (!result.isConfirmed) return
 				this.datatable.destroy()
 				/* this.load = false; */
-				await axios.delete(`Products/DeleteAProduct/${product_id}`)
+				await axios.post(`Users/ChangeRol/${product_id}`)
 				this.index()
 				/* this.$parent.getProducts() */
 				Swal.fire({
 					icon: 'success',
 					title: 'Felicidades!',
-					text: 'Producto eliminado',
+					text: 'Rol cambiado',
 					showConfirmButton: true,
 					confirmButtonText: 'Aceptar',
 					/* timer: 1500 */

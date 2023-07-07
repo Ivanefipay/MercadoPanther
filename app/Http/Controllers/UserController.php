@@ -35,6 +35,14 @@ class UserController extends Controller
 		$id = Auth::id();
 		return $id;
 	}
+	public function changeRol(User $user)
+	{
+
+		/* $rol = $user->role();
+		dd($rol);
+		if (!$rol == 'admin') $user->assignRole('admin');
+		else $user->assignRole('user'); */
+	}
 
 	public function getAllRoles()
 	{
@@ -80,7 +88,7 @@ class UserController extends Controller
 	}
 	public function getAllUsersForDataTable()
 	{
-		$users = User::get();
+		$users = User::with('roles');
 		return DataTables::of($users)
 			->addColumn('action', function ($row) {
 				return "<a

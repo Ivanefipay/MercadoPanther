@@ -12,6 +12,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
 Route::get('/test', function () {
+
+	/* $user->getRole('user'); */
 	/* return Role::all()->pluck('name'); */
 	/* $users = User::get();
 	foreach($users as $user){
@@ -37,6 +39,7 @@ Route::group(['prefix' => 'Users', 'controller' => UserController::class], funct
 		Route::get('/GetAllSalesByUser/{user}', 'getAllSalesByUser');
 		Route::get('/GetAllUserWithSales', 'getAllUserWithSales');
 		Route::get('/GetAllUsersForDataTable', 'getAllUsersForDataTable');
+		Route::post('/ChangeRol/{product}', 'changeRol');
 	});
 	Route::group(['middleware' => ['auth']], function () {
 		Route::get('/GetUsersAuth', 'getUsersAuth');

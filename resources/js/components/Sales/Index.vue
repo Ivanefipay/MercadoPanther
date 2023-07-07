@@ -31,7 +31,7 @@
 				</div>
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item">Total a pagar: </li><br>
-					<li class="list-group-item">Valor:  <br><br>
+					<li class="list-group-item">Valor: $ {{ this.value }}<br><br>
 						<a class="btn btn-primary my-2 mx-4 d-flex justify-content-center">Pagar</a>
 					</li><br>
 
@@ -43,8 +43,8 @@
 
 <script>
 
-import axios from 'axios';
-import Swal from 'sweetalert2';
+/* import axios from 'axios';
+import Swal from 'sweetalert2'; */
 export default {
 	name: 'MercadoPantherIndex',
 
@@ -54,11 +54,8 @@ export default {
 	data() {
 		return {
 			products: [],
-			categories: [],
-			productForCategory: [],
-			load_modal: false,
-			modal: null,
-			product: null
+			product: null,
+			value: 0
 		};
 	},
 	created() {
@@ -73,8 +70,12 @@ export default {
 		},
 		async getProductsForUser() {
 			try {
+				this.value = 0
 				const { data: { sale } } = await axios.get('Sales/GetAllSaleForSale')
 				this.products = sale;
+				for (var i = 0; i < this.products.length; i++) {
+					this.value = this.products[i].product.value + this.value
+				}
 			} catch (error) {
 				console.log(error);
 			}
@@ -91,7 +92,6 @@ export default {
 				if (!result.isConfirmed) return
 				/* this.load = false; */
 				await axios.delete(`Sales/DeleteAProductSale/${product_id}`)
-
 				this.index()
 				/* this.$parent.getProducts() */
 				Swal.fire({
@@ -108,21 +108,7 @@ export default {
 
 		},
 
-		openModal() {
-			this.load_modal = true;
-			setTimeout(() => {
-				this.modal = new bootstrap.Modal(document.getElementById('product_modal'), {
-					keyboard: false
-				})
-				this.modal.show()
 
-				const modal = document.getElementById('product_modal')
-				modal.addEventListener('hidden.bs.modal', () => {
-					this.load_modal = false
-					this.product = null
-				})
-			}, 200)
-		},
 		async getProduct(product_id) {
 			try {
 				const { data } = await axios.get(`Products/GetAProduct/${product_id}`)
@@ -131,11 +117,7 @@ export default {
 				console.log(error);
 			}
 		},
-		closeModal() {
-			this.modal.hide()
-			/* this.$refs.table.datatable.destroy() */
-			/* this.$refs.table.index() */
-		},
+
 		editProduct(product) {
 			this.product = product
 			this.openModal()
