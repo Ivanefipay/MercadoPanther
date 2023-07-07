@@ -1,13 +1,13 @@
 <template>
-	<table class="table" id="productTable" @click="getEvent">
+	<table class="table" id="userTable" @click="getEvent">
 		<thead>
 			<tr>
 				<!-- <th scope="col">IMAGEN</th>
 				<th scope="col"># PRODUCTO</th> -->
 				<th scope="col">NOMBRE</th>
-				<th scope="col">CATEGORIA</th>
-				<th scope="col">VALOR</th>
-				<th scope="col">STOCK</th>
+				<th scope="col">AELLIDO</th>
+				<th scope="col">N° IDENTIFICACION</th>
+				<th scope="col">CORREO ELECTRONICO</th>
 				<th scope="col">ACCIONES</th>
 			</tr>
 		</thead>
@@ -69,17 +69,17 @@ export default {
 		},
 		mountDataTable(){
 			/* setTimeout(() => { */
-			this.datatable = $('#productTable').DataTable({
+			this.datatable = $('#userTable').DataTable({
 				processing: true,
 				serverSide: true,
 				ajax:{
-					url:'/Products/GetAllProductsForDataTable'
+					url:'/Users/GetAllUsersForDataTable'
 				},
 				columns:[
 					{data: 'name', name: 'name'},
-					{data: 'category.name', name: 'category', searchable: false},
-					{data: 'value', name: 'value'},
-					{data: 'stock', name: 'stock'},
+					{data: 'last_name', name: 'last_name'},
+					{data: 'number_id', name: 'number_id'},
+					{data: 'email', name: 'email'},
 					{data: 'action', name: 'action'},
 				]
 			})

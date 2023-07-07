@@ -1,4 +1,3 @@
-
 <x-app title="Mercado Panther" >
-	<products-list/>
+	<product-for-category/>
 </x-app>

@@ -4,16 +4,42 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 use PHPUnit\Event\TestSuite\Loaded;
+use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 
 class UserController extends Controller
 {
-    public function getAllUsers()
+	public function showAllUsers()
+	{
+		return view('users.index');
+	}
+	public function showAllProducts()
+	{
+		return view('products.index');
+	}
+	public function showAllProductsForCategory()
+	{
+		return view('products.index');
+	}
+	public function getAllUsers()
 	{
 		$users = User::get();
 		return response()->json(['users' => $users], 200);
+	}
+	public function getUsersAuth()
+	{
+		$id = Auth::id();
+		return $id;
+	}
+
+	public function getAllRoles()
+	{
+		$roles = Role::all()->pluck('name');
+		return response()->json(['roles' => $roles], 200);
 	}
 
 	public function getAllUserWithSales()
@@ -51,5 +77,21 @@ class UserController extends Controller
 	{
 		$user->delete();
 		return response()->json([], 204);
+	}
+	public function getAllUsersForDataTable()
+	{
+		$users = User::get();
+		return DataTables::of($users)
+			->addColumn('action', function ($row) {
+				return "<a
+			href='#'
+			onclick='event.preventDefault();'
+			data-id='{$row->id}'
+			role='edit'
+			class=' btn btn-warning btn-sm'>Cambiar rol</a>
+			";
+			})
+			->rawColumns(['action'])
+			->make();
 	}
 }

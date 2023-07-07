@@ -1,5 +1,6 @@
+
 <template>
-	<div class="modal fade" id="product_modal" tabindex="-1" aria-hidden="true">
+	<div class="modal fade" id="product_modal" tabindex="-1" aria-hidden="false">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -7,39 +8,38 @@
 					</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
-				<div class="modal-body">
+				<div class="modal-body ">
 					<form @submit.prevent="storeProduct" enctype="multipart/form-data">
-						<div class="mb-3">
-							<label for="images" class="form-label">Imagen</label>
-							<input type="file" class="form-control" id="file" accept="image/#" @change="loadImage">
+						<div class="container ">
+							<div class="row align-items-start">
+								<div class="col">
+									<div v-if="product.image"><img v-bind:src="`/storage/images/${product.image}`"
+											class="img-fluid img-thumbnail whImage"></div>
+									<div v-else><img v-bind:src="`/storage/images/xDdqbLXus4bbzhje8WPK.jpg`"
+											class="img-fluid img-thumbnail whImage"></div>
+								</div>
+								<div class="col">
+									<label for="category" class="form-label my-3">Categoria: {{ product.category.name }}
+									</label>
+									<label for="valor" class="form-label">Valor: $ {{ product.value }}</label>
+									<label for="stock" class="form-label">Stock: {{ product.stock }} unidades</label>
+								</div>
+							</div>
 						</div>
 						<div class="mb-3">
-							<label for="title" class="form-label">Nombre</label>
-							<input type="text" class="form-control" id="title" v-model="product.name">
+
 						</div>
 						<div class="mb-3">
-							<label for="valor" class="form-label">Valor</label>
-							<input type="number" class="form-control" id="Valor" v-model="product.value">
+							<label for="title" class="form-label">{{ product.name }}</label>
 						</div>
 						<div class="mb-3">
-							<label for="stock" class="form-label">Stock</label>
-							<input type="number" class="form-control" id="Stock" v-model="product.stock">
-						</div>
-						<div class="mb-3">
-							<label for="descripcion" class="form-label">Descripción</label>
-							<textarea class="form-control" id="descripcion" rows="3"
-								v-model="product.description"></textarea>
-						</div>
-						<div class="mb-3">
-							<label for="category" class="form-label">Categoria</label>
-							<v-select id="category" :options="this.categories" v-model="product.category_id"
-								:reduce="category => category.id" label="name" :clearable="false">
-							</v-select>
+							<label for="descripcion" class="form-label">Descripción: </label>
+							<label for="descripcion" class="form-label">{{ product.description }}</label>
 						</div>
 						<hr>
 						<section class="d-flex justify-content-center mt-3">
 							<button type="button" class="btn btn-secondary me-1" data-bs-dismiss="modal">Cerrar</button>
-							<button type="submit" class="btn btn-primary me-1">{{ `${is_create ? 'Crear' : 'Actualizar'}`}}</button>
+							<button type="submit" class="btn btn-primary me-1">Agregar a carrito</button>
 						</section>
 					</form>
 				</div>
@@ -73,22 +73,22 @@ export default {
 			this.getCategories()
 			this.setProduct()
 		},
-		setProduct(){
-			if (!this.product_data)return
-			this.product = {...this.product_data}
+		setProduct() {
+			if (!this.product_data) return
+			this.product = { ...this.product_data }
 			this.is_create = false
 		},
-		loadImage(event){
+		loadImage(event) {
 			this.file = event.target.files[0]
 		},
-		loadFormData(){
+		loadFormData() {
 			const form_data = new FormData()
-			if(this.file) form_data.append('image', this.file, this.file.name)
-			form_data.append('name',this.product.name)
-			form_data.append('value',this.product.value)
-			form_data.append('stock',this.product.stock)
-			form_data.append('description',this.product.description)
-			form_data.append('category_id',this.product.category_id)
+			if (this.file) form_data.append('image', this.file, this.file.name)
+			form_data.append('name', this.product.name)
+			form_data.append('value', this.product.value)
+			form_data.append('stock', this.product.stock)
+			form_data.append('description', this.product.description)
+			form_data.append('category_id', this.product.category_id)
 			return form_data
 		},
 		async getCategories() {

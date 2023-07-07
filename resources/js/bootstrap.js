@@ -2,8 +2,11 @@ import _ from 'lodash'
 import * as bootstrap from 'bootstrap'
 import axios from 'axios'
 import swal from 'sweetalert2'
+import jQuery from 'jquery'
+import 'datatables.net-bs5'
 
 
+window.$ = jQuery
 window._ = _
 window.swal = swal
 window.axios = axios
